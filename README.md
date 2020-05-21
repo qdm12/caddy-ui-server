@@ -40,15 +40,15 @@
 
 ### Environment variables
 
-| Environment variable | Default | Possible values | Description |
-| --- | --- | --- | --- |
-| `CADDY_API_ENDPOINT` | `http://localhost:2019` | HTTP(s) address | Caddy server API endpoint |
-| `LOG_ENCODING` | `console` | `json`, `console` | Logging format |
-| `LOG_LEVEL` | `info` | `debug`, `info`, `warning`, `error` | Logging level |
-| `NODE_ID` | `-1` | Integer | Node ID for clusters |
-| `LISTENING_PORT` | `8000` | Integer between `1` and `65535` | Internal listening TCP port |
-| `ROOT_URL` | `/` | URL path *string* | URL path, used if behind a reverse proxy |
-| `TZ` | `America/Montreal` | *string* | Timezone |
+| Environment variable | Default | Description |
+| --- | --- | --- |
+| `CADDY_API_ENDPOINT` | `http://localhost:2019` | Caddy server API endpoint address |
+| `LOG_ENCODING` | `console` | Logging format, can be `json` or `console` |
+| `LOG_LEVEL` | `info` | Logging level, can be `debug`, `info`, `warning`, `error` |
+| `NODE_ID` | `-1` | Node ID for logger (`-1` to disable) |
+| `LISTENING_PORT` | `8000` | Internal listening TCP port |
+| `ROOT_URL` | `/` | URL path, used if behind a reverse proxy |
+| `TZ` | `America/Montreal` | Timezone string |
 
 ## Development
 
