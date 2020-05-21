@@ -10,6 +10,7 @@ type Reader interface {
 	GetLoggerConfig() (encoding logging.Encoding, level logging.Level, nodeID int, err error)
 	GetRootURL(setters ...libparams.GetEnvSetter) (rootURL string, err error)
 	GetCaddyAPIEndpoint() (endpoint string, err error)
+	GetCaddyfilePath() (path string, err error)
 
 	// Version getters
 	GetVersion() string
@@ -41,6 +42,10 @@ func (r *reader) GetRootURL(setters ...libparams.GetEnvSetter) (rootURL string, 
 
 func (r *reader) GetCaddyAPIEndpoint() (endpoint string, err error) {
 	return r.envParams.GetEnv("CADDY_API_ENDPOINT", libparams.Default("http://localhost:2019"))
+}
+
+func (r *reader) GetCaddyfilePath() (path string, err error) {
+	return r.envParams.GetEnv("CADDYFILE_PATH", libparams.Default("Caddyfile"))
 }
 
 func (r *reader) GetVersion() string {
