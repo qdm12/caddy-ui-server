@@ -1,6 +1,8 @@
 package handlers
 
 import (
+	"io"
+	"io/ioutil"
 	"net/http"
 	"strings"
 
@@ -11,20 +13,22 @@ import (
 )
 
 type handler struct {
-	logger logging.Logger
-	proc   processor.Processor
+	logger  logging.Logger
+	proc    processor.Processor
+	readAll func(r io.Reader) ([]byte, error)
 }
 
 func NewHandler(rootURL string, proc processor.Processor, logger logging.Logger) http.HandlerFunc {
 	h := &handler{
-		proc:   proc,
-		logger: logger,
+		proc:    proc,
+		logger:  logger,
+		readAll: ioutil.ReadAll,
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
 		path := strings.TrimPrefix(r.URL.Path, rootURL)
 		switch {
 		case r.Method == http.MethodGet && path == "/caddyfile":
-			h.getCaddyfile(w, r)
+			h.getCaddyfile(w)
 		case r.Method == http.MethodPut && path == "/caddyfile":
 			h.setCaddyfile(w, r)
 		default:
