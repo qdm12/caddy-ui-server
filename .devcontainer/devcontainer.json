@@ -1,5 +1,5 @@
 {
-    "name": "REPONAME_GITHUB-dev",
+    "name": "caddy-ui-server-dev",
     "dockerComposeFile": [
         "docker-compose.yml"
     ],

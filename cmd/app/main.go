@@ -6,18 +6,15 @@ import (
 	"os/signal"
 	"syscall"
 
-	_ "github.com/lib/pq"
-	"github.com/qdm12/golibs/crypto"
 	"github.com/qdm12/golibs/healthcheck"
 	"github.com/qdm12/golibs/logging"
 	"github.com/qdm12/golibs/server"
 	"golang.org/x/net/context"
 
-	"github.com/qdm12/REPONAME_GITHUB/internal/data"
-	"github.com/qdm12/REPONAME_GITHUB/internal/handlers"
-	"github.com/qdm12/REPONAME_GITHUB/internal/params"
-	"github.com/qdm12/REPONAME_GITHUB/internal/processor"
-	"github.com/qdm12/REPONAME_GITHUB/internal/splash"
+	"github.com/qdm12/caddy-ui-server/internal/handlers"
+	"github.com/qdm12/caddy-ui-server/internal/params"
+	"github.com/qdm12/caddy-ui-server/internal/processor"
+	"github.com/qdm12/caddy-ui-server/internal/splash"
 )
 
 func main() {
@@ -61,15 +58,13 @@ func _main(ctx context.Context) int {
 		logger.Error(err)
 		return 1
 	}
-	db, err := setupDatabase(paramsReader, logger)
+	caddyAPIEndpoint, err := paramsReader.GetCaddyAPIEndpoint()
 	if err != nil {
 		logger.Error(err)
 		return 1
 	}
-	defer db.Close()
 
-	crypto := crypto.NewCrypto()
-	proc := processor.NewProcessor(db, crypto)
+	proc := processor.NewProcessor(caddyAPIEndpoint)
 	productionHandlerFunc := handlers.NewHandler(rootURL, proc, logger)
 	healthcheckHandlerFunc := healthcheck.GetHandler(func() error { return nil })
 	logger.Info("Server listening at address 0.0.0.0:%s with root URL %s", listeningPort, rootURL)
@@ -110,22 +105,4 @@ func createLogger(paramsReader params.Reader) (logger logging.Logger, err error)
 		return nil, err
 	}
 	return logging.NewLogger(encoding, level, nodeID)
-}
-
-func setupDatabase(paramsReader params.Reader, logger logging.Logger) (db data.Database, err error) {
-	databaseType := "memory"
-	switch databaseType { // TODO env variable
-	case "memory":
-		return data.NewMemory()
-	case "json":
-		return data.NewJSON("data.json")
-	case "postgres":
-		dbHost, dbUser, dbPassword, dbName, err := paramsReader.GetDatabaseDetails()
-		if err != nil {
-			return nil, err
-		}
-		return data.NewPostgres(dbHost, dbUser, dbPassword, dbName, logger)
-	default:
-		return nil, fmt.Errorf("database type %q not supported", databaseType)
-	}
 }

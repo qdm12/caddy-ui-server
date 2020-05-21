@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"encoding/json"
 	"net/http"
+	"strings"
 
-	"github.com/qdm12/REPONAME_GITHUB/internal/processor"
+	"github.com/qdm12/caddy-ui-server/internal/processor"
 	"github.com/qdm12/golibs/errors"
 	"github.com/qdm12/golibs/logging"
 	"github.com/qdm12/golibs/server"
@@ -21,26 +21,14 @@ func NewHandler(rootURL string, proc processor.Processor, logger logging.Logger)
 		logger: logger,
 	}
 	return func(w http.ResponseWriter, r *http.Request) {
-		// SOAP like api
-		if r.Method != http.MethodPost {
-			h.respondError(w, errors.NewBadRequest("HTTP method must be POST"))
-			return
-		}
-		decoder := json.NewDecoder(r.Body)
-		var body struct {
-			Command string `json:"command"`
-		}
-		if err := decoder.Decode(&body); err != nil {
-			h.respondError(w, errors.NewBadRequest(err))
-			return
-		}
-		switch body.Command {
-		case "get user by id":
-			h.getUserByID(w, r)
-		case "create user":
-			h.createUser(w, r)
+		path := strings.TrimPrefix(r.URL.Path, rootURL)
+		switch {
+		case r.Method == http.MethodGet && path == "/caddyfile":
+			h.getCaddyfile(w, r)
+		case r.Method == http.MethodPut && path == "/caddyfile":
+			h.setCaddyfile(w, r)
 		default:
-			h.respondError(w, errors.NewBadRequest("command %q is invalid", body.Command))
+			h.respondError(w, errors.NewBadRequest("invalid %s request at %s", r.Method, path))
 		}
 	}
 }

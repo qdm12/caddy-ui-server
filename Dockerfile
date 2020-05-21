@@ -28,31 +28,21 @@ LABEL \
     org.opencontainers.image.created=$BUILD_DATE \
     org.opencontainers.image.version=$VERSION \
     org.opencontainers.image.revision=$VCS_REF \
-    org.opencontainers.image.url="https://github.com/qdm12/REPONAME_GITHUB" \
-    org.opencontainers.image.documentation="https://github.com/qdm12/REPONAME_GITHUB/blob/master/README.md" \
-    org.opencontainers.image.source="https://github.com/qdm12/REPONAME_GITHUB" \
-    org.opencontainers.image.title="REPONAME_GITHUB" \
-    org.opencontainers.image.description="SHORT_DESCRIPTION"
+    org.opencontainers.image.url="https://github.com/qdm12/caddy-ui-server" \
+    org.opencontainers.image.documentation="https://github.com/qdm12/caddy-ui-server/blob/master/README.md" \
+    org.opencontainers.image.source="https://github.com/qdm12/caddy-ui-server" \
+    org.opencontainers.image.title="caddy-ui-server" \
+    org.opencontainers.image.description="Server responsible to serve the Caddy UI and communicate with the Caddy server API"
 COPY --from=alpine --chown=1000 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=alpine --chown=1000 /usr/share/zoneinfo /usr/share/zoneinfo
-ENV TZ=America/Montreal \
-    HTTP_TIMEOUT=3000 \
-    LOG_ENCODING=json \
+ENV CADDY_API_ENDPOINT=http://localhost:2019 \
+    LOG_ENCODING=console \
     LOG_LEVEL=info \
-    NODE_ID=0 \
-    LISTENING_PORT=8000 \
+    NODE_ID=-1 \
+    LISTENING_PORT=8080 \
     ROOT_URL=/ \
-    SQL_HOST=postgres \
-    SQL_USER=postgres \
-    SQL_PASSWORD=postgres \
-    SQL_DBNAME=postgres \
-    REDIS_HOST=redis \
-    REDIS_PORT=6379 \
-    REDIS_PASSWORD= \
-    GOTIFY_URL= \
-    GOTIFY_TOKEN=
+    TZ=America/Montreal
 ENTRYPOINT ["/app"]
 HEALTHCHECK --interval=10s --timeout=5s --start-period=5s --retries=2 CMD ["/app","healthcheck"]
 USER 1000
-COPY --chown=1000 postgres/schema.sql /schema.sql
 COPY --from=builder --chown=1000 /tmp/gobuild/app /app

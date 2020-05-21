@@ -9,7 +9,7 @@ type Reader interface {
 	GetListeningPort() (listeningPort, warning string, err error)
 	GetLoggerConfig() (encoding logging.Encoding, level logging.Level, nodeID int, err error)
 	GetRootURL(setters ...libparams.GetEnvSetter) (rootURL string, err error)
-	GetDatabaseDetails() (hostname, user, password, dbName string, err error)
+	GetCaddyAPIEndpoint() (endpoint string, err error)
 
 	// Version getters
 	GetVersion() string
@@ -39,8 +39,8 @@ func (r *reader) GetRootURL(setters ...libparams.GetEnvSetter) (rootURL string, 
 	return r.envParams.GetRootURL()
 }
 
-func (r *reader) GetDatabaseDetails() (hostname, user, password, dbName string, err error) {
-	return r.envParams.GetDatabaseDetails()
+func (r *reader) GetCaddyAPIEndpoint() (endpoint string, err error) {
+	return r.envParams.GetEnv("CADDY_API_ENDPOINT", libparams.Default("http://localhost:2019"))
 }
 
 func (r *reader) GetVersion() string {
