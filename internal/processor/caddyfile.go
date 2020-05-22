@@ -11,16 +11,16 @@ func (p *processor) GetCaddyfile() (content []byte, err error) {
 }
 
 func (p *processor) SetCaddyfile(content []byte) (err error) {
-	r, err := http.NewRequest(http.MethodPost, p.caddyAPIEndpoint, bytes.NewBuffer(content))
+	r, err := http.NewRequest(http.MethodPost, p.caddyAPIEndpoint+"/load", bytes.NewBuffer(content))
 	if err != nil {
 		return err
 	}
-	status, respContent, err := p.client.DoHTTPRequest(r)
+	r.Header.Set("Content-Type", "text/caddyfile")
+	status, _, err := p.client.DoHTTPRequest(r)
 	if err != nil {
 		return err
 	} else if status != http.StatusOK {
 		return fmt.Errorf("HTTP status code %d", status)
 	}
-	fmt.Println("Received from API: ", string(respContent))
 	return p.fileManager.WriteToFile(p.dataPath+"/Caddyfile", content)
 }
