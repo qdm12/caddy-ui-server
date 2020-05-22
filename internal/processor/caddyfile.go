@@ -7,6 +7,8 @@ import (
 )
 
 func (p *processor) GetCaddyfile() (content []byte, err error) {
+	p.caddyfileMutex.Lock()
+	defer p.caddyfileMutex.Unlock()
 	return p.fileManager.ReadFile(p.dataPath + "/Caddyfile")
 }
 
@@ -22,5 +24,7 @@ func (p *processor) SetCaddyfile(content []byte) (err error) {
 	} else if status != http.StatusOK {
 		return fmt.Errorf("HTTP status code %d", status)
 	}
+	p.caddyfileMutex.Lock()
+	defer p.caddyfileMutex.Unlock()
 	return p.fileManager.WriteToFile(p.dataPath+"/Caddyfile", content)
 }

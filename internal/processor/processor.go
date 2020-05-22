@@ -1,6 +1,7 @@
 package processor
 
 import (
+	"sync"
 	"time"
 
 	"github.com/qdm12/golibs/files"
@@ -18,6 +19,7 @@ type processor struct {
 	dataPath         string
 	fileManager      files.FileManager
 	client           network.Client
+	caddyfileMutex   sync.Mutex
 }
 
 // NewProcessor creates a new processor object
