@@ -4,6 +4,7 @@ ARG NODE_VERSION=14
 
 FROM alpine:${ALPINE_VERSION} AS alpine
 RUN apk --update add ca-certificates tzdata
+RUN touch /Caddyfile
 
 FROM golang:${GO_VERSION}-alpine${ALPINE_VERSION} AS builder
 ARG GOLANGCI_LINT_VERSION=v1.27.0
@@ -19,19 +20,6 @@ COPY internal ./internal
 RUN go test ./...
 RUN golangci-lint run --timeout=10m
 RUN go build -ldflags="-s -w" -o app cmd/app/main.go
-
-FROM node:${NODE_VERSION}-alpine${ALPINE_VERSION} AS base-ui
-WORKDIR /workspace
-COPY ui/package.json ui/yarn.lock ./
-RUN yarn install --no-progress
-COPY ui/ ./
-
-FROM base-ui AS react-tester
-RUN yarn lint
-RUN yarn test --ci --coverage
-
-FROM base-ui AS react-builder
-RUN yarn build
 
 FROM scratch
 ARG BUILD_DATE
@@ -59,5 +47,7 @@ ENV CADDY_API_ENDPOINT=http://localhost:2019 \
 ENTRYPOINT ["/app"]
 HEALTHCHECK --interval=10s --timeout=5s --start-period=5s --retries=2 CMD ["/app","healthcheck"]
 USER 1000
-COPY --from=react-builder --chown=1000 /workspace/build/ /ui/
+COPY --from=alpine --chown=1000 /Caddyfile /Caddyfile
+# Requires: docker buildx build -o build ui
+COPY --chown=1000 ./build/ui/ /ui/
 COPY --from=builder --chown=1000 /tmp/gobuild/app /app
