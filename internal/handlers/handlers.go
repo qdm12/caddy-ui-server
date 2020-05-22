@@ -9,6 +9,7 @@ import (
 	"github.com/qdm12/caddy-ui-server/internal/processor"
 	"github.com/qdm12/golibs/errors"
 	"github.com/qdm12/golibs/logging"
+	"github.com/qdm12/golibs/network"
 	"github.com/qdm12/golibs/server"
 )
 
@@ -24,12 +25,24 @@ func NewHandler(rootURL string, proc processor.Processor, logger logging.Logger)
 		logger:  logger,
 		readAll: ioutil.ReadAll,
 	}
+	ipManager := network.NewIPManager(logger)
+	fileServer := http.NewServeMux()
+	uiHandler := http.FileServer(http.Dir("./ui"))
+	uiHandler = http.StripPrefix(rootURL+"/ui/", uiHandler)
+	fileServer.Handle(rootURL+"/", uiHandler)
 	return func(w http.ResponseWriter, r *http.Request) {
+		ip, err := ipManager.GetClientIP(r)
+		if err != nil {
+			logger.Error(err)
+		}
+		logger.Info("HTTP %s %s from %s", r.Method, r.URL.Path, ip)
 		path := strings.TrimPrefix(r.URL.Path, rootURL)
 		switch {
-		case r.Method == http.MethodGet && path == "/caddyfile":
+		case r.Method == http.MethodGet && !strings.HasPrefix(path, "/api"):
+			http.ServeFile(w, r, "./ui/"+path)
+		case r.Method == http.MethodGet && path == "/api/caddyfile":
 			h.getCaddyfile(w)
-		case r.Method == http.MethodPut && path == "/caddyfile":
+		case r.Method == http.MethodPut && path == "/api/caddyfile":
 			h.setCaddyfile(w, r)
 		default:
 			h.respondError(w, errors.NewBadRequest("invalid %s request at %s", r.Method, path))
