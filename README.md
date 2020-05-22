@@ -43,7 +43,7 @@
 | Environment variable | Default | Description |
 | --- | --- | --- |
 | `CADDY_API_ENDPOINT` | `http://localhost:2019` | Caddy server API endpoint address |
-| `CADDYFILE_PATH` | `Caddyfile` | Filepath to the Caddyfile |
+| `DATA_PATH` | `./data` | Filepath to the data directory (Caddyfile stored there) |
 | `LOG_ENCODING` | `console` | Logging format, can be `json` or `console` |
 | `LOG_LEVEL` | `info` | Logging level, can be `debug`, `info`, `warning`, `error` |
 | `NODE_ID` | `-1` | Node ID for logger (`-1` to disable) |

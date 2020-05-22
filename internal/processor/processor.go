@@ -15,16 +15,16 @@ type Processor interface {
 
 type processor struct {
 	caddyAPIEndpoint string
-	caddyfilePath    string
+	dataPath         string
 	fileManager      files.FileManager
 	client           network.Client
 }
 
 // NewProcessor creates a new processor object
-func NewProcessor(caddyAPIEndpoint, caddyfilePath string, fileManager files.FileManager) Processor {
+func NewProcessor(caddyAPIEndpoint, dataPath string, fileManager files.FileManager) Processor {
 	return &processor{
 		caddyAPIEndpoint: caddyAPIEndpoint,
-		caddyfilePath:    caddyfilePath,
+		dataPath:         dataPath,
 		fileManager:      fileManager,
 		client:           network.NewClient(time.Second),
 	}

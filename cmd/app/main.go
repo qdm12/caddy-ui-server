@@ -64,15 +64,15 @@ func _main(ctx context.Context) int {
 		logger.Error(err)
 		return 1
 	}
-	caddyfilePath, err := paramsReader.GetCaddyfilePath()
+	dataPath, err := paramsReader.GetDataPath()
 	if err != nil {
 		logger.Error(err)
 		return 1
 	}
 	logger.Info("Caddy API endpoint: %s", caddyAPIEndpoint)
-	logger.Info("Caddyfile path: %s", caddyfilePath)
+	logger.Info("Data path: %s", dataPath)
 
-	proc := processor.NewProcessor(caddyAPIEndpoint, caddyfilePath, files.NewFileManager())
+	proc := processor.NewProcessor(caddyAPIEndpoint, dataPath, files.NewFileManager())
 	productionHandlerFunc := handlers.NewHandler(rootURL, proc, logger)
 	healthcheckHandlerFunc := healthcheck.GetHandler(func() error { return nil })
 	logger.Info("Server listening at address 0.0.0.0:%s with root URL /%s", listeningPort, rootURL)

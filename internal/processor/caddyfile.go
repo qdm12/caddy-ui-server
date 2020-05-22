@@ -7,7 +7,7 @@ import (
 )
 
 func (p *processor) GetCaddyfile() (content []byte, err error) {
-	return p.fileManager.ReadFile(p.caddyfilePath)
+	return p.fileManager.ReadFile(p.dataPath + "/Caddyfile")
 }
 
 func (p *processor) SetCaddyfile(content []byte) (err error) {
@@ -22,5 +22,5 @@ func (p *processor) SetCaddyfile(content []byte) (err error) {
 		return fmt.Errorf("HTTP status code %d", status)
 	}
 	fmt.Println("Received from API: ", string(respContent))
-	return p.fileManager.WriteToFile(p.caddyfilePath, content)
+	return p.fileManager.WriteToFile(p.dataPath+"/Caddyfile", content)
 }
