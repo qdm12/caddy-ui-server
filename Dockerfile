@@ -38,10 +38,11 @@ LABEL \
 COPY --from=alpine --chown=1000 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=alpine --chown=1000 /usr/share/zoneinfo /usr/share/zoneinfo
 ENV CADDY_API_ENDPOINT=http://localhost:2019 \
+    CADDYFILE_PATH=./Caddyfile \
     LOG_ENCODING=console \
     LOG_LEVEL=info \
     NODE_ID=-1 \
-    LISTENING_PORT=8080 \
+    LISTENING_PORT=8000 \
     ROOT_URL=/ \
     TZ=America/Montreal
 ENTRYPOINT ["/app"]

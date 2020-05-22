@@ -27,7 +27,7 @@
 1. Use the following command:
 
     ```sh
-    docker run -d -p 8080:8080/tcp qmcgaw/caddy-ui
+    docker run -d -p 8000:8000/tcp qmcgaw/caddy-ui
     ```
 
     You can also use [docker-compose.yml](https://github.com/qdm12/caddy-ui-server/blob/master/docker-compose.yml) with:
@@ -90,7 +90,10 @@
     # Lint the code
     golangci-lint run
     # Build the Docker image
+    docker build -o build ui
     docker build -t qmcgaw/caddy-ui .
+    # Run the container
+    docker run -it --rm -p 8000:8000/tcp qmcgaw/caddy-ui
     ```
 
 1. See [Contributing](https://github.com/qdm12/caddy-ui-server/master/.github/CONTRIBUTING.md) for more information on how to contribute to this repository.

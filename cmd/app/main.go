@@ -69,11 +69,13 @@ func _main(ctx context.Context) int {
 		logger.Error(err)
 		return 1
 	}
+	logger.Info("Caddy API endpoint: %s", caddyAPIEndpoint)
+	logger.Info("Caddyfile path: %s", caddyfilePath)
 
 	proc := processor.NewProcessor(caddyAPIEndpoint, caddyfilePath, files.NewFileManager())
 	productionHandlerFunc := handlers.NewHandler(rootURL, proc, logger)
 	healthcheckHandlerFunc := healthcheck.GetHandler(func() error { return nil })
-	logger.Info("Server listening at address 0.0.0.0:%s with root URL %s", listeningPort, rootURL)
+	logger.Info("Server listening at address 0.0.0.0:%s with root URL /%s", listeningPort, rootURL)
 	serverErrors := make(chan []error)
 	go func() {
 		serverErrors <- server.RunServers(ctx,

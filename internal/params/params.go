@@ -45,7 +45,7 @@ func (r *reader) GetCaddyAPIEndpoint() (endpoint string, err error) {
 }
 
 func (r *reader) GetCaddyfilePath() (path string, err error) {
-	return r.envParams.GetEnv("CADDYFILE_PATH", libparams.Default("Caddyfile"))
+	return r.envParams.GetEnv("CADDYFILE_PATH", libparams.Default("./Caddyfile"), libparams.CaseSensitiveValue())
 }
 
 func (r *reader) GetVersion() string {
