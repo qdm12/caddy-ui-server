@@ -1,26 +1,33 @@
 # Caddy UI server
 
-⚠️ Under construction and not functional yet ⚠️
-
-*Server responsible to serve the Caddy UI and communicate with the Caddy server API*
+➡️ Server responsible to serve the Caddy UI and communicate with the Caddy server API*
 
 <img height="200" src="https://raw.githubusercontent.com/qdm12/caddy-ui-server/master/title.svg?sanitize=true">
 
-[![Build status](https://github.com/qdm12/caddy-ui-server/workflows/Buildx%20latest/badge.svg)](https://github.com/qdm12/caddy-ui-server/actions?query=workflow%3A%22Buildx+latest%22)
-[![Docker Pulls](https://img.shields.io/docker/pulls/qmcgaw/caddy-ui.svg)](https://hub.docker.com/r/qmcgaw/caddy-ui)
-[![Docker Stars](https://img.shields.io/docker/stars/qmcgaw/caddy-ui.svg)](https://hub.docker.com/r/qmcgaw/caddy-ui)
-[![Image size](https://images.microbadger.com/badges/image/qmcgaw/caddy-ui.svg)](https://microbadger.com/images/qmcgaw/caddy-ui)
-[![Image version](https://images.microbadger.com/badges/version/qmcgaw/caddy-ui.svg)](https://microbadger.com/images/qmcgaw/caddy-ui)
+Please refer to the [**caddy-ui**](https://github.com/qdm12/caddy-ui) repository for end-user instructions.
 
+[![Build status](https://github.com/qdm12/caddy-ui-server/workflows/Buildx%20latest/badge.svg)](https://github.com/qdm12/caddy-ui-server/actions?query=workflow%3A%22Buildx+latest%22)
 [![Join Slack channel](https://img.shields.io/badge/slack-@qdm12-yellow.svg?logo=slack)](https://join.slack.com/t/qdm12/shared_invite/enQtOTE0NjcxNTM1ODc5LTYyZmVlOTM3MGI4ZWU0YmJkMjUxNmQ4ODQ2OTAwYzMxMTlhY2Q1MWQyOWUyNjc2ODliNjFjMDUxNWNmNzk5MDk)
 [![GitHub last commit](https://img.shields.io/github/last-commit/qdm12/caddy-ui-server.svg)](https://github.com/qdm12/caddy-ui-server/commits/master)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/y/qdm12/caddy-ui-server.svg)](https://github.com/qdm12/caddy-ui-server/graphs/contributors)
 [![GitHub issues](https://img.shields.io/github/issues/qdm12/caddy-ui-server.svg)](https://github.com/qdm12/caddy-ui-server/issues)
 
-## Features
+## Architecture
 
-- Compatible with `amd64`, `386`, `arm64`, `arm32v7` and `arm32v6` CPU architectures
-- [Docker image tags and sizes](https://hub.docker.com/r/qmcgaw/caddy-ui/tags)
+<img height="150" src="https://raw.githubusercontent.com/qdm12/caddy-ui-server/master/doc/architecture.svg?sanitize=true">
+
+The Caddy UI server acts as intermediary between the [web frontend app](https://github.com/qdm12/caddy-ui)
+and the [Caddy v2.0.0 API](https://caddyserver.com/docs/api).
+It also persists the [Caddyfile](https://caddyserver.com/docs/caddyfile) so acts like a source of truth.
+On the other hand, it also relies on Caddy storing its configuration in its `autosave.json` such that it will pick up
+the last configuration it used if it restarts.
+
+## Repository
+
+The repository contains:
+
+- an HTTP server written in Go
+- a web frontend app written in ReactJS, as the **ui** Git submodule
 
 ## Setup
 
