@@ -3,8 +3,6 @@ services:
   caddy:
     image: qmcgaw/caddy-scratch
     container_name: caddy
-    volumes:
-      - caddydir:/caddydir
     expose:
       - 2019/tcp
     ports:
@@ -19,6 +17,3 @@ services:
       - 8000:8000/tcp
     environment:
       - CADDY_API_ENDPOINT=http://caddy:2019
-
-volumes:
-  caddydir:
