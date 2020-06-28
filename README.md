@@ -1,8 +1,6 @@
 # Caddy UI server
 
-➡️ Server responsible to serve the Caddy UI and communicate with the Caddy server API*
-
-<img height="200" src="https://raw.githubusercontent.com/qdm12/caddy-ui-server/master/title.svg?sanitize=true">
+➡️ *Server responsible to serve the Caddy UI and communicate with the Caddy server API*
 
 Please refer to the [**caddy-ui**](https://github.com/qdm12/caddy-ui) repository for end-user instructions.
 
