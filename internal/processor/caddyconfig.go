@@ -12,13 +12,15 @@ func (p *processor) GetCaddyConfig() (jsonContent []byte, err error) {
 		return nil, err
 	}
 	r.Header.Set("Content-Type", "application/json")
-	status, content, err := p.client.DoHTTPRequest(r)
+	status, jsonContent, err := p.client.DoHTTPRequest(r)
 	if err != nil {
 		return nil, err
-	} else if status != http.StatusOK {
+	}
+	p.logger.Info("Caddy (get config) responded HTTP status %d with content: %s", status, string(jsonContent))
+	if status != http.StatusOK {
 		return nil, fmt.Errorf("HTTP status code %d", status)
 	}
-	return content, nil
+	return jsonContent, nil
 }
 
 func (p *processor) SetCaddyConfig(jsonContent []byte) (err error) {
@@ -27,11 +29,15 @@ func (p *processor) SetCaddyConfig(jsonContent []byte) (err error) {
 		return err
 	}
 	r.Header.Set("Content-Type", "application/json")
-	status, _, err := p.client.DoHTTPRequest(r)
+	status, jsonContent, err := p.client.DoHTTPRequest(r)
 	if err != nil {
 		return err
-	} else if status != http.StatusOK {
-		return fmt.Errorf("HTTP status code %d", status)
+	}
+	p.logger.Info("Caddy (set config) responded HTTP status %d with content: %s", status, string(jsonContent))
+	if status == http.StatusOK {
+		return nil
+	}
+	return fmt.Errorf("HTTP status code %d", status)
 	}
 	return nil
 }

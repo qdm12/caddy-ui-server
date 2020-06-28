@@ -69,7 +69,7 @@ func _main(ctx context.Context) int {
 		return 1
 	}
 
-	proc := processor.NewProcessor(caddyAPIEndpoint)
+	proc := processor.NewProcessor(caddyAPIEndpoint, logger)
 	productionHandlerFunc := handlers.NewHandler(rootURL, proc, logger, corsWhitelist)
 	healthcheckHandlerFunc := healthcheck.GetHandler(func() error { return nil })
 	logger.Info("Server listening at address 0.0.0.0:%s with root URL /%s", listeningPort, rootURL)
