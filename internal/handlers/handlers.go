@@ -26,10 +26,6 @@ func NewHandler(rootURL string, proc processor.Processor, logger logging.Logger)
 		readAll: ioutil.ReadAll,
 	}
 	ipManager := network.NewIPManager(logger)
-	fileServer := http.NewServeMux()
-	uiHandler := http.FileServer(http.Dir("./ui"))
-	uiHandler = http.StripPrefix(rootURL+"/ui/", uiHandler)
-	fileServer.Handle(rootURL+"/", uiHandler)
 	return func(w http.ResponseWriter, r *http.Request) {
 		ip, err := ipManager.GetClientIP(r)
 		if err != nil {
@@ -40,10 +36,10 @@ func NewHandler(rootURL string, proc processor.Processor, logger logging.Logger)
 		switch {
 		case r.Method == http.MethodGet && !strings.HasPrefix(path, "/api"):
 			http.ServeFile(w, r, "./ui/"+path)
-		case r.Method == http.MethodGet && path == "/api/caddyfile":
-			h.getCaddyfile(w)
-		case r.Method == http.MethodPut && path == "/api/caddyfile":
-			h.setCaddyfile(w, r)
+		case r.Method == http.MethodGet && path == "/api/config":
+			h.getCaddyConfig(w)
+		case r.Method == http.MethodPost && path == "/api/load":
+			h.setCaddyConfig(w, r)
 		default:
 			h.respondError(w, errors.NewBadRequest("invalid %s request at %s", r.Method, path))
 		}

@@ -12,20 +12,19 @@ Please refer to the [**caddy-ui**](https://github.com/qdm12/caddy-ui) repository
 
 ## Architecture
 
-<img height="150" src="https://raw.githubusercontent.com/qdm12/caddy-ui-server/master/doc/architecture.svg?sanitize=true">
+This server is stateless and does the following:
 
-The Caddy UI server acts as intermediary between the [web frontend app](https://github.com/qdm12/caddy-ui)
-and the [Caddy v2.0.0 API](https://caddyserver.com/docs/api).
-It also persists the [Caddyfile](https://caddyserver.com/docs/caddyfile) so acts like a source of truth.
-On the other hand, it also relies on Caddy storing its configuration in its `autosave.json` such that it will pick up
-the last configuration it used if it restarts.
+- Serve the built static files of the frontend to the user
+- Act as an intermediary proxy to communicate with your Caddy server (to work around CORS)
+
+It is written in Go in order to have a small static binary on a Docker Scratch image.
 
 ## Repository
 
 The repository contains:
 
-- an HTTP server written in Go
-- a web frontend app written in ReactJS, as the **ui** Git submodule
+- the HTTP API server written in Go
+- the web frontend app written in ReactJS, as the **ui** Git submodule
 
 ## Setup
 
@@ -48,7 +47,6 @@ The repository contains:
 | Environment variable | Default | Description |
 | --- | --- | --- |
 | `CADDY_API_ENDPOINT` | `http://localhost:2019` | Caddy server API endpoint address |
-| `DATA_PATH` | `./data` | Filepath to the data directory (Caddyfile stored there) |
 | `LOG_ENCODING` | `console` | Logging format, can be `json` or `console` |
 | `LOG_LEVEL` | `info` | Logging level, can be `debug`, `info`, `warning`, `error` |
 | `NODE_ID` | `-1` | Node ID for logger (`-1` to disable) |
@@ -105,7 +103,8 @@ The repository contains:
 
 ## TODOs
 
-- [ ] Bundle in qmcgaw/caddy-scratch
+- [ ] Unit tests
+- [ ] Integration tests
 
 ## License
 

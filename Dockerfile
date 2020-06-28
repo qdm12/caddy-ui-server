@@ -4,9 +4,6 @@ ARG NODE_VERSION=14
 
 FROM alpine:${ALPINE_VERSION} AS alpine
 RUN apk --update add ca-certificates tzdata
-RUN mkdir /tmp/data && \
-    chmod 1000 /tmp/data && \
-    chmod 700 /tmp/data
 
 FROM golang:${GO_VERSION}-alpine${ALPINE_VERSION} AS builder
 ARG GOLANGCI_LINT_VERSION=v1.27.0
@@ -40,7 +37,6 @@ LABEL \
 COPY --from=alpine --chown=1000 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=alpine --chown=1000 /usr/share/zoneinfo /usr/share/zoneinfo
 ENV CADDY_API_ENDPOINT=http://localhost:2019 \
-    DATA_PATH=./data \
     LOG_ENCODING=console \
     LOG_LEVEL=info \
     NODE_ID=-1 \
@@ -49,9 +45,6 @@ ENV CADDY_API_ENDPOINT=http://localhost:2019 \
     TZ=America/Montreal
 ENTRYPOINT ["/app"]
 HEALTHCHECK --interval=10s --timeout=5s --start-period=5s --retries=2 CMD ["/app","healthcheck"]
-COPY --from=alpine --chown=1000 /tmp/data /data
-COPY --chown=1000 Caddyfile /data/Caddyfile
-VOLUME ["/data"]
 USER 1000
 # Requires: docker buildx build -o build ui
 COPY --chown=1000 ./build/ui/ /ui/
