@@ -8,8 +8,6 @@ on:
       - .github/workflows/buildx-release.yml
       - .github/workflows/dockerhub-description.yml
       - .github/workflows/labels.yml
-      - .github/workflows/misspell.yml
-      - .github/workflows/security.yml
       - .github/CODEOWNERS
       - .github/CONTRIBUTING.md
       - .github/FUNDING.yml
