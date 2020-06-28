@@ -19,7 +19,7 @@ type handler struct {
 	readAll func(r io.Reader) ([]byte, error)
 }
 
-func NewHandler(rootURL string, proc processor.Processor, logger logging.Logger) http.HandlerFunc {
+func NewHandler(rootURL string, proc processor.Processor, logger logging.Logger, corsWhitelist string) http.HandlerFunc {
 	h := &handler{
 		proc:    proc,
 		logger:  logger,
@@ -40,6 +40,10 @@ func NewHandler(rootURL string, proc processor.Processor, logger logging.Logger)
 			h.getCaddyConfig(w)
 		case r.Method == http.MethodPost && path == "/api/load":
 			h.setCaddyConfig(w, r)
+		case r.Method == http.MethodOptions && path == "/api/load": // CORS
+			w.Header().Set("Access-Control-Allow-Origin", corsWhitelist)
+			w.Header().Set("Access-Control-Allow-Methods", "POST")
+			w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 		default:
 			h.respondError(w, errors.NewBadRequest("invalid %s request at %s", r.Method, path))
 		}

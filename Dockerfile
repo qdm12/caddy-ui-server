@@ -42,7 +42,8 @@ ENV CADDY_API_ENDPOINT=http://localhost:2019 \
     NODE_ID=-1 \
     LISTENING_PORT=8000 \
     ROOT_URL=/ \
-    TZ=America/Montreal
+    TZ=America/Montreal \
+    CORS_WHITELIST=
 ENTRYPOINT ["/app"]
 HEALTHCHECK --interval=10s --timeout=5s --start-period=5s --retries=2 CMD ["/app","healthcheck"]
 USER 1000

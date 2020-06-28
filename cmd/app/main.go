@@ -63,9 +63,14 @@ func _main(ctx context.Context) int {
 		logger.Error(err)
 		return 1
 	}
+	corsWhitelist, err := paramsReader.GetCorsWhitelist()
+	if err != nil {
+		logger.Error(err)
+		return 1
+	}
 
 	proc := processor.NewProcessor(caddyAPIEndpoint)
-	productionHandlerFunc := handlers.NewHandler(rootURL, proc, logger)
+	productionHandlerFunc := handlers.NewHandler(rootURL, proc, logger, corsWhitelist)
 	healthcheckHandlerFunc := healthcheck.GetHandler(func() error { return nil })
 	logger.Info("Server listening at address 0.0.0.0:%s with root URL /%s", listeningPort, rootURL)
 	serverErrors := make(chan []error)
