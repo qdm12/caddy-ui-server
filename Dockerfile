@@ -32,10 +32,10 @@ LABEL \
     org.opencontainers.image.created=$BUILD_DATE \
     org.opencontainers.image.version=$VERSION \
     org.opencontainers.image.revision=$VCS_REF \
-    org.opencontainers.image.url="https://github.com/qdm12/caddy-ui-server" \
-    org.opencontainers.image.documentation="https://github.com/qdm12/caddy-ui-server/blob/master/README.md" \
-    org.opencontainers.image.source="https://github.com/qdm12/caddy-ui-server" \
-    org.opencontainers.image.title="caddy-ui-server" \
+    org.opencontainers.image.url="https://github.com/qdm12/caddy-ui" \
+    org.opencontainers.image.documentation="https://github.com/qdm12/caddy-ui/blob/master/README.md" \
+    org.opencontainers.image.source="https://github.com/qdm12/caddy-ui" \
+    org.opencontainers.image.title="Caddy UI" \
     org.opencontainers.image.description="Server responsible to serve the Caddy UI and communicate with the Caddy server API"
 COPY --from=alpine --chown=1000 /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 COPY --from=alpine --chown=1000 /usr/share/zoneinfo /usr/share/zoneinfo
