@@ -11,6 +11,7 @@ import (
 	"github.com/qdm12/golibs/logging"
 	"github.com/qdm12/golibs/server"
 
+	"github.com/qdm12/caddy-ui-server/internal/fs"
 	"github.com/qdm12/caddy-ui-server/internal/handlers"
 	"github.com/qdm12/caddy-ui-server/internal/params"
 	"github.com/qdm12/caddy-ui-server/internal/processor"
@@ -67,6 +68,19 @@ func _main(ctx context.Context) int {
 	if err != nil {
 		logger.Error(err)
 		return 1
+	}
+
+	// Change UI base url
+	if len(rootURL) > 0 {
+		fileSystem := fs.NewFileSystem()
+		err := fileSystem.ReplaceAllRecursively("ui", map[string]string{
+			"/static/":       rootURL + "/static/",
+			"/manifest.json": rootURL + "/manifest.json",
+		})
+		if err != nil {
+			logger.Error(err)
+			return 1
+		}
 	}
 
 	proc := processor.NewProcessor(caddyAPIEndpoint, logger)
